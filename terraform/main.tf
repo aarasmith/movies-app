@@ -62,12 +62,13 @@ module "lambda_role" {
 module "lambda" {
     source = "./modules/lambda"
     depends_on = [null_resource.docker_build_and_push]
-    description = "treatwell movie lambda"
-    image_name = local.name
-    docker_entrypoint = "main.lambda_handler"
     account_id = data.aws_caller_identity.current.account_id
     region = local.region
+    description = "treatwell movie lambda"
     lambda_name = local.name
+    image_name = local.name
+    lambda_architecture = "arm64"
+    docker_entrypoint = "main.lambda_handler"
     lambda_role = module.lambda_role.lambda_role
     lambda_memory_size = 512
     lambda_timeout = 300

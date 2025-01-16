@@ -9,3 +9,4 @@ variable "lambda_name" {}
 variable "lambda_role" {}
 variable "lambda_memory_size" {}
 variable "lambda_timeout" {}
+variable "lambda_architecture" {}

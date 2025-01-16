@@ -1,7 +1,7 @@
 
 resource "aws_lambda_function" "lambda" {
     description = var.description
-    architectures = ["arm64"]
+    architectures = [var.lambda_architecture]
     package_type = "Image"
     function_name = var.lambda_name
     image_uri = "${var.account_id}.dkr.ecr.${var.region}.amazonaws.com/${var.image_name}:latest"

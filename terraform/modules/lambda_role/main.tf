@@ -16,27 +16,8 @@ resource "aws_iam_role" "lambda_role" {
     })
 }
 
-resource "aws_iam_role_policy" "lambda_policy_log" {
-    name = "Policy_${var.lambda_name}_log"
-    role = aws_iam_role.lambda_role.id
-    policy = jsonencode({
-        Version = "2012-10-17"
-        Statement = [
-            {
-                Action = [
-                    "logs:PutLogEvents",
-                    "logs:CreateLogGroup",
-                    "logs:CreateLogStream"
-                ]
-                Effect = "Allow"
-                Resource = "arn:aws:logs:${var.region}:${var.account_id}:*"
-            }
-        ]
-    })
-}
-
-resource "aws_iam_role_policy" "lambda_policy_log_group" {
-    name = "Policy_${var.lambda_name}_log_group"
+resource "aws_iam_role_policy" "lambda_policy_logs" {
+    name = "Policy_${var.lambda_name}_logs"
     role = aws_iam_role.lambda_role.id
     policy = jsonencode({
         Version = "2012-10-17"

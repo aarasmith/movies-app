@@ -1,4 +1,4 @@
-# Treatwell Movies App
+# Movies App
 
 This application ingests API data from `https://api.sampleapis.com/movies/` for all categories available every morning at 1am GMT and stores them as individual json files in an S3 bucket.
 

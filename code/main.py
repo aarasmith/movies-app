@@ -4,12 +4,16 @@ import json
 import datetime
 from typing import List, Dict, Union
 
-def main():
-    payload = fetch_api_data()
-    write_json_to_s3(payload)
+def lambda_handler(event, context):
+    main()
 
-def fetch_api_data() -> List[Dict]:
-    res = requests.get('https://api.sampleapis.com/movies/animation')
+def main():
+    for category in ["action-adventure", "animation", "classic", "comedy", "drama", "horror", "family", "mystery", "scifi-fantasy", "western"]:
+        payload = fetch_api_data(category)
+        write_json_to_s3(payload)
+
+def fetch_api_data(category: str) -> List[Dict]:
+    res = requests.get(f'https://api.sampleapis.com/movies/{category}')
     return res.json()
 
 def connect_to_s3():
@@ -35,6 +39,4 @@ def write_json_to_s3(json_object: Union[Dict, List], overwrite: bool = False) ->
         Bucket='treatwell',
         Key=key
     )
-
-if __name__ == "__main__":
-    main()
+    

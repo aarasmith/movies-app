@@ -1,0 +1,7 @@
+__pycache__
+treatwell_venv
+.terraform.lock.hcl
+.terraform
+terraform.tfstate
+code.zip
+terraform.tfstate.backup

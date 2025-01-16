@@ -1,3 +1,8 @@
+locals {
+    name = "treatwell-movies"
+    region = "eu-west-2"
+}
+
 terraform {
   backend "s3" {
     bucket = "terraform-treatwell"
@@ -11,11 +16,7 @@ provider "aws" {
     region = "eu-west-2"
 }
 
-locals {
-    name = "treatwell-movies"
-    region = "eu-west-2"
-}
-
+#for use as the account_id arg in various modules
 data "aws_caller_identity" "current" {}
 
 resource "aws_s3_bucket" "bucket" {
@@ -27,6 +28,7 @@ module "ecr_repo" {
     name = local.name
 }
 
+#zip the code so we can check the hash to determine if image re-build is necessary
 data "archive_file" "init" {
   type        = "zip"
   source_dir = "../code/"
@@ -65,7 +67,7 @@ module "lambda" {
     docker_entrypoint = "main.lambda_handler"
     account_id = data.aws_caller_identity.current.account_id
     region = local.region
-    lambda_name = "treatwell-movies"
+    lambda_name = locals.name
     lambda_role = module.lambda_role.lambda_role
     lambda_memory_size = 512
     lambda_timeout = 300

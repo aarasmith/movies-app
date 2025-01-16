@@ -3,11 +3,12 @@ import boto3
 import json
 import datetime
 from typing import List, Dict, Union
+from botocore.client import BaseClient
 
 def lambda_handler(event, context):
     main()
 
-def main():
+def main() -> None:
     for category in ["action-adventure", "animation", "classic", "comedy", "drama", "horror", "family", "mystery", "scifi-fantasy", "western"]:
         payload = fetch_api_data(category)
         write_json_to_s3(payload, category)
@@ -16,7 +17,7 @@ def fetch_api_data(category: str) -> List[Dict]:
     res = requests.get(f'https://api.sampleapis.com/movies/{category}')
     return res.json()
 
-def connect_to_s3():
+def connect_to_s3() -> BaseClient:
     s3 = boto3.client('s3')
     return s3
 
@@ -40,3 +41,4 @@ def write_json_to_s3(json_object: Union[Dict, List], category: str, overwrite: b
         Bucket='andrew-treatwell',
         Key=key
     )
+    return key

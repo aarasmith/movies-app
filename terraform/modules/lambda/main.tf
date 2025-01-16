@@ -23,13 +23,6 @@ resource "aws_lambda_function" "lambda" {
     ephemeral_storage {
         size = 512
     }
-
-    # vpc_config {
-    #     security_group_ids = [
-    #         var.sg_id
-    #     ]
-    #     subnet_ids = [for id in var.subnet_ids : id]
-    # }
 }
 
 resource "aws_cloudwatch_log_group" "lambda" {

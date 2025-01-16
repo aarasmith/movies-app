@@ -1,3 +1,11 @@
+terraform {
+  backend "s3" {
+    bucket = "terraform-treatwell"
+    key    = "movies"
+    region = "eu-west-2"
+  }
+}
+
 provider "aws" {
     profile = "default"
     region = "eu-west-2"

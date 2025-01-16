@@ -25,6 +25,7 @@ def write_json_to_s3(json_object: Union[Dict, List], category: str, overwrite: b
     
     Args:
         json_object (Dict/List): Dictionary or list of dicts obtained from the fetch_api_data() function
+        category (str): Name of the category being saved for use in the filename
         overwrite (bool): If true, writes the file as 'movies.json', otherwise adds current time to prevent overwriting
     """
     

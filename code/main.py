@@ -10,7 +10,7 @@ def lambda_handler(event, context):
 def main():
     for category in ["action-adventure", "animation", "classic", "comedy", "drama", "horror", "family", "mystery", "scifi-fantasy", "western"]:
         payload = fetch_api_data(category)
-        write_json_to_s3(payload)
+        write_json_to_s3(payload, category)
 
 def fetch_api_data(category: str) -> List[Dict]:
     res = requests.get(f'https://api.sampleapis.com/movies/{category}')
@@ -20,7 +20,7 @@ def connect_to_s3():
     s3 = boto3.client('s3')
     return s3
 
-def write_json_to_s3(json_object: Union[Dict, List], overwrite: bool = False) -> None:
+def write_json_to_s3(json_object: Union[Dict, List], category: str, overwrite: bool = False) -> None:
     """Write the API request payload to s3
     
     Args:
@@ -30,9 +30,9 @@ def write_json_to_s3(json_object: Union[Dict, List], overwrite: bool = False) ->
     
     s3 = connect_to_s3()
     if not overwrite:
-        key = f"movies_{str(datetime.datetime.now())}.json"
+        key = f"movies_{category}_{datetime.datetime.today().strftime('%Y-%m-%d')}.json"
     else:
-        key = "movies.json"
+        key = f"movies_{category}.json"
 
     s3.put_object(
         Body=json.dumps(json_object),

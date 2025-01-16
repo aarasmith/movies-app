@@ -67,7 +67,7 @@ module "lambda" {
     docker_entrypoint = "main.lambda_handler"
     account_id = data.aws_caller_identity.current.account_id
     region = local.region
-    lambda_name = locals.name
+    lambda_name = local.name
     lambda_role = module.lambda_role.lambda_role
     lambda_memory_size = 512
     lambda_timeout = 300

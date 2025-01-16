@@ -36,7 +36,6 @@ def write_json_to_s3(json_object: Union[Dict, List], overwrite: bool = False) ->
 
     s3.put_object(
         Body=json.dumps(json_object),
-        Bucket='treatwell',
+        Bucket='andrew-treatwell',
         Key=key
     )
-    

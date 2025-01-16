@@ -14,10 +14,6 @@ resource "aws_s3_bucket" "bucket" {
   bucket = "andrew-treatwell"
 }
 
-output "bucket_name" {
-  value = aws_s3_bucket.bucket.bucket
-}
-
 module "ecr_repo" {
     source = "./modules/ecr_repo"
     name = local.name

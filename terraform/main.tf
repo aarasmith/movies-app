@@ -1,6 +1,6 @@
 locals {
-    name = "treatwell-movies"
-    region = "eu-west-2"
+  name   = "treatwell-movies"
+  region = "eu-west-2"
 }
 
 terraform {
@@ -12,8 +12,8 @@ terraform {
 }
 
 provider "aws" {
-    profile = "default"
-    region = "eu-west-2"
+  profile = "default"
+  region  = "eu-west-2"
 }
 
 #for use as the account_id arg in various modules
@@ -24,21 +24,21 @@ resource "aws_s3_bucket" "bucket" {
 }
 
 module "ecr_repo" {
-    source = "./modules/ecr_repo"
-    name = local.name
+  source = "./modules/ecr_repo"
+  name   = local.name
 }
 
 #zip the code so we can check the hash to determine if image re-build is necessary
 data "archive_file" "init" {
   type        = "zip"
-  source_dir = "../code/"
+  source_dir  = "../code/"
   output_path = "code.zip"
 }
 #Re-build the docker image if necessary
 resource "null_resource" "docker_build_and_push" {
   triggers = {
     dockerfile_hash = filemd5("../dockerfile")
-    src_hash = "${data.archive_file.init.output_sha}"
+    src_hash        = "${data.archive_file.init.output_sha}"
   }
 
   provisioner "local-exec" {
@@ -52,31 +52,31 @@ resource "null_resource" "docker_build_and_push" {
 }
 
 module "lambda_role" {
-    source = "./modules/lambda_role"
-    lambda_name = local.name
-    region = local.region
-    account_id = data.aws_caller_identity.current.account_id
-    bucket = aws_s3_bucket.bucket.bucket
+  source      = "./modules/lambda_role"
+  lambda_name = local.name
+  region      = local.region
+  account_id  = data.aws_caller_identity.current.account_id
+  bucket      = aws_s3_bucket.bucket.bucket
 }
 
 module "lambda" {
-    source = "./modules/lambda"
-    depends_on = [null_resource.docker_build_and_push]
-    account_id = data.aws_caller_identity.current.account_id
-    region = local.region
-    description = "treatwell movie lambda"
-    lambda_name = local.name
-    image_name = local.name
-    lambda_architecture = "arm64"
-    docker_entrypoint = "main.lambda_handler"
-    lambda_role = module.lambda_role.lambda_role
-    lambda_memory_size = 512
-    lambda_timeout = 300
+  source              = "./modules/lambda"
+  depends_on          = [null_resource.docker_build_and_push]
+  account_id          = data.aws_caller_identity.current.account_id
+  region              = local.region
+  description         = "treatwell movie lambda"
+  lambda_name         = local.name
+  image_name          = local.name
+  lambda_architecture = "arm64"
+  docker_entrypoint   = "main.lambda_handler"
+  lambda_role         = module.lambda_role.lambda_role
+  lambda_memory_size  = 512
+  lambda_timeout      = 300
 }
 
 module "lambda_eventbridge" {
-    source = "./modules/lambda_eventbridge"
-    depends_on = [module.lambda]
-    lambda_arn = module.lambda.lambda_arn
-    lambda_name = local.name
+  source      = "./modules/lambda_eventbridge"
+  depends_on  = [module.lambda]
+  lambda_arn  = module.lambda.lambda_arn
+  lambda_name = local.name
 }

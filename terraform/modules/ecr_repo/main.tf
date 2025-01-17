@@ -1,11 +1,11 @@
 resource "aws_ecr_repository" "this" {
-    name = var.name
+  name = var.name
 }
 
 resource "aws_ecr_lifecycle_policy" "this" {
-    repository = aws_ecr_repository.this.name
+  repository = aws_ecr_repository.this.name
 
-    policy = <<EOF
+  policy = <<EOF
 {
     "rules" : [
         {

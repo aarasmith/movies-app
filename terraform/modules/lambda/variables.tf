@@ -1,5 +1,5 @@
 variable "description" {
-    type = string
+  type = string
 }
 variable "image_name" {}
 variable "docker_entrypoint" {}

@@ -1,7 +1,6 @@
 resource "aws_cloudwatch_event_rule" "daily_1am" {
-  name        = "daily_1am_rule"
-  description = "trigger lambda every day at 1am"
-
+  name                = "daily_1am_rule"
+  description         = "trigger lambda every day at 1am"
   schedule_expression = "cron(0 1 * * ? *)"
 }
 
